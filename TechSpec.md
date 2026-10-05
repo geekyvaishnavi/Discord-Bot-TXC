@@ -56,18 +56,19 @@ The ping must be sent through the message `content` because mentions inside an e
 ### Message Content
 
 ```text
-Hey {mention}, welcome to **Tech X Creators**! 🎀
+Hey {mention}, welcome to **Tech X Creators**! 
 
-It's lovely to have you here. ✨
+We’re happy to have you here. 
 
-You've joined a community of developers,
-creators, builders, and curious minds
-who are always learning something new.
+You’ve just joined a community of **developers, creators, builders, and curious minds** — a space to learn, share ideas, collaborate, and build together.
 
-A few places to start:
-୨୧ Read <#RULES_CHANNEL_ID>
-୨୧ Tell us a little about yourself in <#INTRO_CHANNEL_ID>
-୨୧ Meet the community & start building 💻
+**A few places to get started:**
 
-Your ideas belong here. ♡
+› Read the <#RULES_CHANNEL_ID>  
+› Introduce yourself in <#INTRO_CHANNEL_ID>  
+› Meet the community, share your work, and start building. 💻
+
+Bring your ideas, ask questions, share what you’re working on, and don’t be afraid to experiment.
+
+**Glad to have you with us. Welcome to TXC! 🩷**
 
