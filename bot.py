@@ -1,3 +1,4 @@
+import logging
 import os
 
 import discord
@@ -10,6 +11,13 @@ WELCOME_CHANNEL_ID = int(os.environ["WELCOME_CHANNEL_ID"])
 RULES_CHANNEL_ID = int(os.environ["RULES_CHANNEL_ID"])
 INTRO_CHANNEL_ID = int(os.environ["INTRO_CHANNEL_ID"])
 WELCOME_DM_ENABLED = os.getenv("WELCOME_DM_ENABLED", "false").lower() == "true"
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)-8s %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+log = logging.getLogger("txc_bot")
 
 intents = discord.Intents.default()
 intents.members = True  # privileged; required for on_member_join
@@ -32,14 +40,14 @@ def build_welcome_content(member: discord.Member) -> str:
 
 @client.event
 async def on_ready():
-    print(f"Logged in as {client.user} (◕‿◕)")
-    print(f"Members intent enabled: {client.intents.members}")
+    log.info(f"Logged in as {client.user} (ID: {client.user.id})")
+    log.info(f"Members intent enabled: {client.intents.members}")
     channel = client.get_channel(WELCOME_CHANNEL_ID)
     if channel is None:
-        print(f"⚠ Welcome channel {WELCOME_CHANNEL_ID} not visible to the bot — check the ID / bot's access")
+        log.warning(f"Welcome channel {WELCOME_CHANNEL_ID} not visible to the bot — check the ID / bot's access")
         return
     perms = channel.permissions_for(channel.guild.me)
-    print(
+    log.info(
         f"Welcome channel: #{channel.name} in {channel.guild.name} | "
         f"view={perms.view_channel} send={perms.send_messages}"
     )
@@ -47,10 +55,10 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member: discord.Member):
-    print(f"Member joined: {member} in {member.guild.name}")
+    log.debug(f"Member joined: {member} in {member.guild.name}")
     channel = member.guild.get_channel(WELCOME_CHANNEL_ID)
     if channel is None:
-        print(f"Welcome channel {WELCOME_CHANNEL_ID} not found in {member.guild.name}")
+        log.warning(f"Welcome channel {WELCOME_CHANNEL_ID} not found in {member.guild.name}")
         return
 
     await channel.send(
@@ -61,11 +69,12 @@ async def on_member_join(member: discord.Member):
     if WELCOME_DM_ENABLED:
         try:
             await member.send(
-                f"Welcome to **Tech X Creators**, {member.name}! ♡ (づ｡◕‿‿◕｡)づ\n"
+                f"Welcome to **Tech X Creators**, {member.name}!\n"
                 f"Start by reading <#{RULES_CHANNEL_ID}> and saying hi in <#{INTRO_CHANNEL_ID}>."
             )
         except discord.Forbidden:
             pass  # member has DMs closed
 
 
-client.run(TOKEN)
+# log_handler=None: use the logging setup above instead of discord.py's own
+client.run(TOKEN, log_handler=None)
